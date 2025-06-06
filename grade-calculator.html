@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Improved Grade Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef2f7;
+      padding: 20px;
+      max-width: 480px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+    #subjects {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input[type="number"] {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="number"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #222;
+    }
+    #add-subject, #remove-subject {
+      background-color: #28a745;
+      margin-top: 10px;
+    }
+    #remove-subject {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📊 Improved Grade Calculator</h2>
+  <p>Enter marks (out of 100) for each subject:</p>
+
+  <div id="subjects">
+    <input type="number" class="subject" placeholder="Subject 1" min="0" max="100" />
+    <input type="number" class="subject" placeholder="Subject 2" min="0" max="100" />
+  </div>
+
+  <button id="add-subject">+ Add Subject</button>
+  <button id="remove-subject">- Remove Subject</button>
+  <button id="calculate-btn">Calculate GPA</button>
+
+  <div id="result"></div>
+
+  <script>
+    const subjectsDiv = document.getElementById('subjects');
+    const addBtn = document.getElementById('add-subject');
+    const removeBtn = document.getElementById('remove-subject');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+
+    let subjectCount = 2;
+
+    addBtn.onclick = () => {
+      if (subjectCount >= 10) return alert('Maximum 10 subjects allowed');
+      subjectCount++;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'subject';
+      input.placeholder = `Subject ${subjectCount}`;
+      input.min = 0;
+      input.max = 100;
+      subjectsDiv.appendChild(input);
+    };
+
+    removeBtn.onclick = () => {
+      if (subjectCount <= 2) return alert('Minimum 2 subjects required');
+      subjectsDiv.lastElementChild.remove();
+      subjectCount--;
+    };
+
+    calculateBtn.onclick = () => {
+      const inputs = document.querySelectorAll('.subject');
+      let total = 0;
+      let validCount = 0;
+
+      for (const input of inputs) {
+        const val = parseFloat(input.value);
+        if (!isNaN(val) && val >= 0 && val <= 100) {
+          total += val;
+          validCount++;
+        }
+      }
+
+      if (validCount === 0) {
+        resultDiv.textContent = 'Please enter valid marks.';
+        return;
+      }
+
+      const avg = total / validCount;
+      let grade = '';
+
+      if (avg >= 90) grade = 'A+';
+      else if (avg >= 80) grade = 'A';
+      else if (avg >= 70) grade = 'B';
+      else if (avg >= 60) grade = 'C';
+      else if (avg >= 50) grade = 'D';
+      else grade = 'F';
+
+      resultDiv.innerHTML = `Your Average: <strong>${avg.toFixed(2)}</strong><br>Grade: <strong>${grade}</strong>`;
+    };
+  </script>
+
+</body>
+</html>
